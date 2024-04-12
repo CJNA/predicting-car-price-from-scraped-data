@@ -239,4 +239,4 @@ raw_data.drop(col_to_delete, axis=1, inplace=True)
 
 # -------- deleting old cars
 
-raw_data = raw_data.loc[raw_data['Year'] >= 2016]
+-- raw_data = raw_data.loc[raw_data['Year'] >= 2016]

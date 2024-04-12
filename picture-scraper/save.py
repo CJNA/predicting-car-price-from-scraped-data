@@ -27,7 +27,7 @@ def get_pic(link, name):
         print(link)
         r = requests.get(link, timeout=10)
         im = Image.open(BytesIO(r.content))
-        im.save(name + '_{}.jpg'.format(''.join(choice(char, 3))))
+        im.save(name + '.jpg')
     except:
         print('Problem with {}'.format(link))
 

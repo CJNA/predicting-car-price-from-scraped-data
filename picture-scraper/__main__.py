@@ -1,11 +1,12 @@
 import os
-path = 'c:/users/nicolas/documents/data/thecarconnection/picturescraper/'
+path = '/Users/cjna/Desktop/Src/predicting-car-price-from-scraped-data/picture-scraper/'
 
 os.chdir(path)
 
-directory = 'c:/users/nicolas/desktop/scrap/'
+directory = '/Users/cjna/Desktop/Src/predicting-car-price-from-scraped-data/picture-scraper/image'
 
-files = ['scrape', 'tag', 'save', 'select']
+# files = ['scrape', 'tag', 'save', 'select_images']
+files = ['scrape']
 
 if __name__ == '__main__':
     if not os.path.isdir(directory):
