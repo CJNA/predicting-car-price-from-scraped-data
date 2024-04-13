@@ -1,5 +1,6 @@
 import bs4 as bs
 from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -57,19 +58,21 @@ def model_menu(listed, selenium_driver):
         try:
             dropdown = selenium_driver.find_element(By.CLASS_NAME, 'dropdown')
             dropdown.click()
-            options = dropdown.find_elements(By.ID, 'moreYmm')  # get the options
-            for option in options:
-                model_menu_list.append(option.get_attribute("href"))
+            options = dropdown.find_elements(By.TAG_NAME, 'a')  # get the options
+            for a in options:
+                # For some reason attributes come with full url. We care for relative url.
+                parsed_url = urlparse(a.get_attribute("href"))
+                model_menu_list.append(parsed_url.path)
         except selenium.common.exceptions.NoSuchElementException:
             continue
-
+        
     # Filter out unreleased vehicles. For that _2025
     model_menu_list = [i for i in model_menu_list if i is not None and not i.endswith('_2025')]
     model_menu_list = [i.replace('overview', 'specifications') for i in model_menu_list if i is not None]
     return model_menu_list
 
 def specs_and_pics(listed):
-    picture_tab = [i.replace('overview', 'photos') for i in listed if i is not None]
+    picture_tab = [i.replace('specifications', 'photos') for i in listed if i is not None]
     specifications_table = pd.DataFrame()
     for row, pic in zip(listed, picture_tab):
         try:
@@ -83,13 +86,15 @@ def specs_and_pics(listed):
             specifications_df.loc['Make', :] = soup.find_all('a', {'id': 'a_bc_1'})[0].text.strip()
             specifications_df.loc['Model', :] = soup.find_all('a', {'id': 'a_bc_2'})[0].text.strip()
             specifications_df.loc['Year', :] = soup.find_all("title")[0].text[:4].strip()
+            # specifications_df.loc['MSRP', :] = soup.find_all("span", {"class": "price"})[0].text.strip()
         except:
             print('Problem with {}.'.format(website + row))
 
-        for div in soup.find_all("div", {"class": "specs-set-item"}):
-            row_name = div.find_all("span")[0].text
-            row_value = div.find_all("span")[1].text
-            specifications_df.loc[row_name] = row_value
+        # This is for adding specs to the dataframe
+        # for div in soup.find_all("div", {"class": "specs-set-item"}):
+        #     row_name = div.find_all("span")[0].text
+        #     row_value = div.find_all("span")[1].text
+        #     specifications_df.loc[row_name] = row_value
 
         fetch_pics_url = str(fetch(website, pic))
 

@@ -23,6 +23,9 @@ os.chdir('pictures/')
 
 
 def get_pic(link, name):
+    if os.path.exists(name + '.jpg'):
+        # Skip regeneration of existing images
+        return
     try:
         print(link)
         r = requests.get(link, timeout=10)
