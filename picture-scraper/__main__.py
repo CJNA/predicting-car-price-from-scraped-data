@@ -5,8 +5,7 @@ os.chdir(path)
 
 directory = '/Users/cjna/Desktop/Src/predicting-car-price-from-scraped-data/picture-scraper/image'
 
-# files = ['scrape', 'tag']
-files = ['save', 'select_images']
+files = ['scrape', 'tag', 'save', 'select_images']
 
 if __name__ == '__main__':
     if not os.path.isdir(directory):

@@ -75,7 +75,3 @@ __EXAMPLE__. [Example — Audi vs BMW ConvNet.ipynb](https://github.com/nicolas-
 
 ## RELATED WORKS
 1. [Classifying Cars in the TCC Dataset](https://github.com/AshivDhondea/ENSC813_report/blob/master/paper/ENSC_813_paper%20Ashiv%20Hans%20Dhondea.pdf) by [Ashiv Hans Dondea](https://github.com/AshivDhondea/ENSC813_Project).
-
-
-# Things to run
-Run clean_up_picture.py 
