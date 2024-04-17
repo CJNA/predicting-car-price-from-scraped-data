@@ -25,7 +25,6 @@ def run():
     df = df.dropna(subset=['Picture'])
 
     # ----- // Cleaning Columns
-    # We do not have columns anymore
 
     # df['MSRP'] = df['MSRP'].str.replace(',', '').str.replace('$', '').str[:-3]
 

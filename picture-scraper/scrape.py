@@ -24,15 +24,21 @@ def fetch(page, addition=''):
 
 def all_makes():
     car_makes = []
-    soup = fetch(website, "/new-cars")
-    for i in range(1, 7):  # 1 to 6 inclusive
-        selector = f"#by-make > div.block-inner > div:nth-child({i})"
-        by_make_div = soup.select_one(selector)
-        car_make_links = by_make_div.find_all("a")
+    target_urls = [tuple(["/new-cars", 7]), tuple(["/used-cars", 6])]
 
-        for link in car_make_links:
-            car_make_url = link['href']
-            car_makes.append(car_make_url)
+    for target in target_urls:
+        if target[0] == "/new-cars":
+            continue
+        soup = fetch(website, target[0])
+
+        for i in range(1, target[1]):  # Stop is exclusive
+            selector = f"#by-make > div.block-inner > div:nth-child({i})"
+            by_make_div = soup.select_one(selector)
+            car_make_links = by_make_div.find_all("a")
+
+            for link in car_make_links:
+                car_make_url = link['href']
+                car_makes.append(car_make_url)
 
     return car_makes
 
@@ -75,6 +81,7 @@ def specs_and_pics(listed):
     picture_tab = [i.replace('specifications', 'photos') for i in listed if i is not None]
     specifications_table = pd.DataFrame()
     for row, pic in zip(listed, picture_tab):
+        print('Fetching {}.'.format(website + row))
         try:
             soup = fetch(website, row)
             specifications_df = pd.DataFrame(columns=[soup.find_all("title")[0].text[:-15]])
@@ -99,7 +106,8 @@ def specs_and_pics(listed):
         fetch_pics_url = str(fetch(website, pic))
 
         try:
-            match = re.findall('lrg.+?_l.jpg', fetch_pics_url)
+            # match = re.findall('lrg.+?_l.jpg', fetch_pics_url)
+            match = re.findall('lrg.+?_l.jpg|data-image-large="https://images.hgmsites.net/lrg/.+?_l.webp', fetch_pics_url)
             if match:
                 photo = match[0].replace('\\', '')
                 specifications_df.loc['Picture', :] = photo
@@ -115,10 +123,10 @@ def run(directory):
     driver = webdriver.Chrome(options=options)
 
     os.chdir(directory)
-    a = all_makes()
-    b = make_menu(a)
-    c = model_menu(b, driver)
-    pd.DataFrame(c).to_csv('c.csv', header=None)
+    # a = all_makes()
+    # b = make_menu(a)
+    # c = model_menu(b, driver)
+    # pd.DataFrame(c).to_csv('c.csv', header=None)
     d = pd.read_csv('c.csv', index_col=0, header=None).values.ravel()
     e = specs_and_pics(d)
     e.to_csv('specs-and-pics.csv')
